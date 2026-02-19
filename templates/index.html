@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head lang="en">
+    <title th:text="${title}"></title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="icon" th:href="@{${resourcePrefix} + '/favicon'}">
+    <link media="screen" rel="stylesheet" th:href="@{${resourcePrefix} + ${bootstrapCss}}" />
+    <link media="screen" rel="stylesheet" th:href="@{${resourcePrefix} + '/css/default.css'}" />
+    
+    <style>
+        body { background-color: #f4f7f9 !important; padding-top: 70px; }
+        
+        .page-header {
+            border-bottom: 2px solid #004a99;
+            margin: 20px 0 40px 0;
+            padding-bottom: 10px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* Estilo de la Tarjeta */
+        .app-card {
+            background: white !important;
+            border: 1px solid #e1e4e8 !important;
+            border-radius: 12px !important;
+            padding: 25px !important;
+            margin-bottom: 30px !important;
+            text-align: center !important;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05) !important;
+            transition: all 0.3s ease !important;
+            min-height: 250px;
+            display: block;
+            text-decoration: none !important;
+        }
+
+        .app-card:hover {
+            transform: translateY(-5px) !important;
+            box-shadow: 0 12px 20px rgba(0,0,0,0.1) !important;
+            border-color: #004a99 !important;
+            text-decoration: none !important;
+        }
+
+        /* Contenedor del Logo */
+        .app-icon-container {
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .app-logo { max-height: 80px; width: auto; }
+
+        /* Textos */
+        .app-card h3 { 
+            color: #004a99; 
+            margin-top: 10px; 
+            font-size: 1.5em; 
+            font-weight: 600;
+        }
+        
+        .app-description { 
+            color: #666; 
+            font-size: 0.95em; 
+            line-height: 1.4;
+            margin-top: 10px;
+        }
+
+        .app-card-link:hover, .app-card-link:focus {
+            text-decoration: none !important;
+        }
+    </style>
+
+    <script th:src="@{${resourcePrefix} + ${jqueryJs}}"></script>
+    <script th:src="@{${resourcePrefix} + ${bootstrapJs}}"></script>
+    <script th:src="@{${resourcePrefix} + ${handlebars}}"></script>
+    <script th:src="@{${resourcePrefix} + '/js/shiny.app.js' }"></script>
+    <script th:src="@{${resourcePrefix} + '/js/shiny.api.js' }"></script>
+    <script th:src="@{${resourcePrefix} + '/js/shiny.connections.js'}"></script>
+    <script th:src="@{${resourcePrefix} + '/js/shiny.instances.js' }"></script>
+    <script th:src="@{${resourcePrefix} + '/js/shiny.ui.js' }"></script>
+    <script th:src="@{${resourcePrefix} + '/js/shiny.common.js'}"></script>
+    <script th:src="@{${resourcePrefix} + '/handlebars/precompiled.js'}"></script>
+</head>
+
+<body th:class="${bodyClasses}">
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <th:block th:fragment="app(app)">
+        <div class="col-sm-6 col-md-4" th:if="${app != null}">
+            <a th:href="@{/app/{id}(id=${app.id})}" class="app-card-link">
+                <div class="app-card">
+                    <div class="app-icon-container">
+                        <img th:if="${appLogos.get(app) != null}" th:src="${appLogos.get(app).src}" class="app-logo">
+                        <img th:unless="${appLogos.get(app) != null}" th:src="@{/assets/logo.jpeg}" class="app-logo">
+                    </div>
+                    <h3 th:text="${app.displayName == null} ? ${app.id} : ${app.displayName}"></h3>
+                    <p class="app-description" th:if="${app.description != null}" th:utext="${app.description}"></p>
+                </div>
+            </a>
+        </div>
+    </th:block>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h1 class="page-header text-center">Mis Aplicaciones</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12" th:if="${ungroupedApps.isEmpty() && groupedApps.isEmpty()}">
+                <div class="alert alert-info text-center">No hay aplicaciones disponibles.</div>
+            </div>
+
+            <th:block th:each="app: ${ungroupedApps}">
+                <div th:replace="~{index :: app(${app})}"></div>
+            </th:block>
+
+            <th:block th:each="group: ${templateGroups}">
+                <div class="col-xs-12">
+                    <h2 th:text="${group.properties.get('display-name')}"></h2>
+                </div>
+                <th:block th:each="app: ${groupedApps.get(group.id)}">
+                    <div th:replace="~{index :: app(${app})}"></div>
+                </th:block>
+            </th:block>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/modal :: modal}"></div>
+
+    <script th:inline="javascript" type="text/javascript">
+        /*<![CDATA[*/
+        $(window).on('load', function () {
+            window.Shiny.common.init([[${contextPath}]], [[${application_name}]], [[${spInstance}]], [[${appMaxInstances}]], [[${myAppsMode}]], [[${pauseSupported}]]);
+            window.Shiny.common.startIndex();
+        });
+        /*]]>*/
+    </script>
+</body>
+</html>

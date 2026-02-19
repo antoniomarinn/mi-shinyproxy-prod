@@ -1,0 +1,12 @@
+FROM eclipse-temurin:21-jre
+
+WORKDIR /opt/shinyproxy
+
+COPY shinyproxy-3.2.3.jar shinyproxy.jar
+COPY application.yml application.yml
+COPY templates/ ./templates/
+COPY www/ /opt/shinyproxy/www/
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "shinyproxy.jar"]
