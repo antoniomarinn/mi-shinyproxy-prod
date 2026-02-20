@@ -1,0 +1,10 @@
+spring:
+  docker:
+    host: unix:///var/run/docker.sock
+
+shinyproxy:
+  operator:
+    resource-path: /opt/shinyproxy-operator/resources
+    orchestrator: docker
+    docker:
+      data-dir: /opt/shinyproxy-docker-operator/data

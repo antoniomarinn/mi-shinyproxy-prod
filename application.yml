@@ -17,7 +17,11 @@ proxy:
     - name: jeff
       password: password
       groups: user
-
+    - name: noapp
+      password: noapp
+      groups: noapp
+    
+  #proxy.default-websocket-reconnection-mode: auto
   #proxy.my-apps-mode: Modal
   container-wait-time: 60000
   docker:
@@ -32,6 +36,7 @@ proxy:
       description: App de Shiny R 
       container-cmd: ["R", "-e", "shiny::runApp('/srv/shiny-server/app.R', host='0.0.0.0', port=3838)"]
       container-image: mi-shiny-app
+      container-logo: https://www.openanalytics.eu/shinyproxy/logo.png
       docker-image-pull-policy: Never
       access-groups: [ admin, user ]
     - id: app2_r
@@ -39,9 +44,18 @@ proxy:
       description: App 2 de Shiny R 
       container-cmd: ["R", "-e", "shiny::runApp('/srv/shiny-server/app2.R', host='0.0.0.0', port=3838)"]
       container-image: mi-shiny-app
+      container-logo: https://www.openanalytics.eu/shinyproxy/logo.png
       docker-image-pull-policy: Never
       access-groups: [ admin ]
-      
+    - id: app3_r
+      display-name: App en R 3
+      description: App 3 de Shiny R
+      container-volumes: [ "/var/run/docker.sock:/var/run/docker.sock" ]
+      container-cmd: ["/usr/bin/shiny-server"]
+      container-image: mi-shiny-app
+      container-logo: https://www.openanalytics.eu/shinyproxy/logo.png
+      docker-image-pull-policy: Never
+      access-groups: [ admin, user ]
 
 management:
   server:

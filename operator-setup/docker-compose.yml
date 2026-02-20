@@ -1,0 +1,28 @@
+services:
+  shinyproxy-operator:
+    image: openanalytics/shinyproxy-operator:2.3.1
+    container_name: shinyproxy-operator
+    user: "1010:998"
+    environment:
+      SPO_ORCHESTRATOR: docker
+      SPO_DOCKER_GID: 998
+      SPO_DOCKER_DATA_DIR: /opt/shinyproxy-docker-operator/data
+      SPO_INPUT_DIR: /opt/shinyproxy-docker-operator/input
+    volumes:
+      - ./resources:/opt/shinyproxy-operator/resources
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./operator-data:/opt/shinyproxy-docker-operator/data
+      - ./input:/opt/shinyproxy-docker-operator/input
+      - ../templates:/opt/shinyproxy/templates
+      - ../www:/opt/shinyproxy/www
+    group_add:
+      - "998"
+    networks:
+      - sp-shared-network
+    restart: always
+    labels:
+      app: shinyproxy-operator
+
+networks:
+  sp-shared-network:
+    external: true  

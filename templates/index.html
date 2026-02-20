@@ -93,8 +93,7 @@
             <a th:href="@{/app/{id}(id=${app.id})}" class="app-card-link">
                 <div class="app-card">
                     <div class="app-icon-container">
-                        <img th:if="${appLogos.get(app) != null}" th:src="${appLogos.get(app).src}" class="app-logo">
-                        <img th:unless="${appLogos.get(app) != null}" th:src="@{/assets/logo.jpeg}" class="app-logo">
+                        <img class="navbar-brand" th:src="${logo}" th:if="${logo != null}"/>
                     </div>
                     <h3 th:text="${app.displayName == null} ? ${app.id} : ${app.displayName}"></h3>
                     <p class="app-description" th:if="${app.description != null}" th:utext="${app.description}"></p>

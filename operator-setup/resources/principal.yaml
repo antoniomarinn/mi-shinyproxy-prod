@@ -1,0 +1,26 @@
+apiVersion: shinyproxy.openanalytics.eu/v1
+kind: ShinyProxy
+metadata:
+  name: principal
+spec:
+  image: openanalytics/shinyproxy:3.2.3
+  config:
+    proxy:
+      title: Mi Panel Profesional
+      # Importante: Las rutas deben coincidir con los volúmenes del paso 3
+      template-path: /opt/shinyproxy/templates
+      template-resource-path: /opt/shinyproxy/www
+      authentication: simple
+      admin-groups: admin
+      users:
+        - name: marin
+          password: 1234
+          groups: admin
+      specs:
+        - id: app_r
+          display-name: Mi App de R
+          container-image: mi-shiny-app
+        - id: app_r_2
+          display-name: App en R 2
+          container-image: mi-shiny-app
+           
